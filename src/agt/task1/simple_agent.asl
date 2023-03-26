@@ -101,7 +101,6 @@ odd(X) :- X mod 2 == 1.
 /* Task 1.2.4 Start of your solution */
 // You are allowed to use a triggering event other than the one provided 
 
-
 +!compute_list_recursive(Start,End,Acc, List) : Start == End <- 
     //.print("base case reached");
     //.print("start", [Start]);
@@ -128,7 +127,7 @@ odd(X) :- X mod 2 == 1.
  * Context: true (the plan is always applicable)
  * Body: informs about the failure
 */
-
+// is there a possibility to get the technical error and not just "an error happened"? There is almost no way to debug.
 
 /* 
  * Plan for reacting to the addition of the goal !print_list([])
