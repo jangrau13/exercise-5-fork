@@ -15,7 +15,7 @@ odd(X) :- X mod 2 == 1.
 //!start_even_or_odd(4). // uncomment for Task 1.2.3
 //!start_even_or_odd(5). // uncomment for Task 1.2.3
 !start_list_generation(0,4). // uncomment for Task 1.2.4
-//!print_list([0,1,2,3,4]). // uncomment for an example of handling a list with recursion
+!print_list([0,1,2,3,4]). // uncomment for an example of handling a list with recursion
 
 /* 
  * Plan for reacting to the addition of the goal !start_sum
@@ -31,7 +31,6 @@ odd(X) :- X mod 2 == 1.
 /* Task 1.2.1 Start of your solution */
 @compute_sum_task_1_2_1_plan
 +!compute_sum(X,Y,Sum) : true <-
-    .print("Implement Task 1.2.1");
     Sum = X + Y.
 /* Task 1.2.1 End of your solution */
 
@@ -101,13 +100,25 @@ odd(X) :- X mod 2 == 1.
 
 /* Task 1.2.4 Start of your solution */
 // You are allowed to use a triggering event other than the one provided 
-+!compute_list(Start,End, Acc, List) : Start > End <- 
-    List = Acc | Start;
-    !compute_sum(Start,1,Sum);
-    !compute_list(Sum, End, List, List).
 
-+!compute_list(Start,End, Acc, List) : Start == End <- 
-    List = Acc | Start.
+
++!compute_list_recursive(Start,End,Acc, List) : Start == End <- 
+    //.print("base case reached");
+    //.print("start", [Start]);
+    List = [Start].
+    //.print("base case survived").
+
++!compute_list_recursive(Start,End, Acc, List) : Start < End <- 
+    //get list from base case
+    !compute_sum(Start,1,Sum);
+    //.print("preparing recursion for ", Sum);
+    !compute_list_recursive(Sum, End, _, Acc);
+    //.print("concatenating List ", Acc);
+    //.print("adding ", Start);
+    .concat([Start],Acc, List).
+
++!compute_list(Start, End, Acc, List) : true <-
+    !compute_list_recursive(Start, End, _, List).
     
 /* Task 1.2.4 End of your solution */
 
@@ -117,8 +128,7 @@ odd(X) :- X mod 2 == 1.
  * Context: true (the plan is always applicable)
  * Body: informs about the failure
 */
--!compute_list(Start, End,_,_) : true <-
-    .print("Unable to compute a list with integers from ", Start, " to ", End).
+
 
 /* 
  * Plan for reacting to the addition of the goal !print_list([])
