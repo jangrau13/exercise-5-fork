@@ -4,6 +4,7 @@
 best_option(vibrating) :- rank(0) .
 best_option(natural_light) :- rank(1).
 best_option(artificial_light) :- rank(2).
+rank(0).
 
 
 /* Task 2 Start of your solution */
@@ -13,42 +14,32 @@ best_option(artificial_light) :- rank(2).
     ?rank(Old);
     .print("old Rank", Old);
     !get_new_rank(Old, New);
-    .print("new Rank", New).
-    // why is this not working:
-    //-rank(Old);
-    //+rank(New).
+    .print("new Rank", New);
+    -rank(Old);
+    +rank(New).
 
 
 @get_new_rank
 +!get_new_rank(Old, New): true <-
-    New = Old + 1 mod 3.
+    New = ( Old + 1 ) mod 3.
 
 @enable_natural_lights
 +!action_needed : best_option(natural_light) <-
     raiseBlinds;
     .print("blind raising inferred");
-    // why is this not working?
-    !upgrade_rank;
-    -rank(1);
-    +rank(2).
+    !upgrade_rank.
 
 @enable_artificial_lights
 +!action_needed : best_option(artificial_light) <-
     turnOnLights;
-    // why is this not working?
-    //!upgrade_rank.
-    -rank(2);
-    +rank(1).
+    !upgrade_rank.
     
 
 @enable_vibrating
 +!action_needed : best_option(vibrating) <-
     setVibrationsMode;
-    .print("vibrating inferred");
-    // why is this not working?
-    //!upgrade_rank.
-    -rank(0);
-    +rank(1).
+    !upgrade_rank.
+
 
 
 @react_to_upcoming_event_now
@@ -65,7 +56,6 @@ best_option(artificial_light) :- rank(2).
 @keep_waking_up_when_event_is_upcoming
 +!wake_up : owner_state("asleep") & upcoming_event("now") <-
     .print("check for best option");
-    +rank(0);
     !action_needed;
     !wake_up.
 
